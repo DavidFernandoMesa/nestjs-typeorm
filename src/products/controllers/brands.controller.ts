@@ -7,11 +7,16 @@ import {
   Put,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { BrandsService } from '../services/brands.service';
-import { CreateBrandDto, UpdateBrandDto } from '../dtos/brand.dtos';
+import {
+  CreateBrandDto,
+  FilterBrandsDto,
+  UpdateBrandDto,
+} from '../dtos/brand.dtos';
 
 @ApiTags('brands')
 @Controller('brands')
@@ -19,8 +24,8 @@ export class BrandsController {
   constructor(private brandsService: BrandsService) {}
 
   @Get()
-  findAll() {
-    return this.brandsService.findAll();
+  findAll(@Query() params: FilterBrandsDto) {
+    return this.brandsService.findAll(params);
   }
 
   @Get(':id')
