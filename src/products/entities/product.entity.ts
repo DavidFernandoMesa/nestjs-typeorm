@@ -65,4 +65,5 @@ export class Product {
     },
   })
   categories: Category[];
+  newProduct: Category;
 }

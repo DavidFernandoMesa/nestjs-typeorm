@@ -34,7 +34,8 @@ export class OrdersItemService {
   }
 
   async findOne(id: number) {
-    const item = await this.itemsRepo.findOne(id, {
+    const item = await this.itemsRepo.findOne({
+      where: { id },
       relations: ['order', 'product'],
     });
     if (!item) {
@@ -44,8 +45,12 @@ export class OrdersItemService {
   }
 
   async create(data: CreateOrderItemDto) {
-    const order = await this.orderRepo.findOne(data.orderId);
-    const product = await this.productRepo.findOne(data.productId);
+    const order = await this.orderRepo.findOne({
+      where: { id: data.orderId },
+    });
+    const product = await this.productRepo.findOne({
+      where: { id: data.productId },
+    });
     const item = new OrderItem();
     item.order = order;
     item.product = product;
@@ -54,13 +59,19 @@ export class OrdersItemService {
   }
 
   async update(id: number, changes: UpdateOrderItemDto) {
-    const orderItem = await this.itemsRepo.findOne(id);
+    const orderItem = await this.itemsRepo.findOne({
+      where: { id },
+    });
     if (changes.orderId) {
-      const order = await this.orderRepo.findOne(changes.orderId);
+      const order = await this.orderRepo.findOne({
+        where: { id: changes.orderId },
+      });
       orderItem.order = order;
     }
     if (changes.productId) {
-      const product = await this.productRepo.findOne(changes.productId);
+      const product = await this.productRepo.findOne({
+        where: { id: changes.productId },
+      });
       orderItem.product = product;
     }
     if (changes.quantity) {
